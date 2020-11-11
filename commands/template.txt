@@ -1,0 +1,14 @@
+const Discord = require('discord.js');
+
+module.exports.run = async (bot, message, args) => {
+    // Code here
+    }
+
+
+module.exports.config = {
+       name:"Cmd name",
+    description:"Cmd description",
+    usage:"?Cmd",
+    accessableby:"Who can use",
+    aliases:["other ways to execute this command"]
+    }
