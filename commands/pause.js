@@ -1,21 +1,17 @@
-const Discord = require('discord.js');
+const { canModifyQueue } = require("../util/EvobotUtil");
 
-module.exports.run = async (bot, message, args) => {
-	execute(message); {
-		const serverQueue = message.client.queue.get(message.guild.id);
-		if (serverQueue && serverQueue.playing) {
-			serverQueue.playing = false;
-			serverQueue.connection.dispatcher.pause();
-			return message.channel.send('⏸ Paused the music for you!');
-		}
-		return message.channel.send('There is nothing playing.');
-	}
+module.exports = {
+  name: "pause",
+  description: "Pause the currently playing music",
+  execute(message) {
+    const queue = message.client.queue.get(message.guild.id);
+    if (!queue) return message.reply("There is nothing playing.").catch(console.error);
+    if (!canModifyQueue(message.member)) return;
+
+    if (queue.playing) {
+      queue.playing = false;
+      queue.connection.dispatcher.pause(true);
+      return queue.textChannel.send(`${message.author} ⏸ paused the music.`).catch(console.error);
+    }
+  }
 };
-
-module.exports.config = {
-	name:"Pause",
- description:"Pause what's playing",
- usage:"?pause",
- accessableby:"Members",
- aliases:[]
- }

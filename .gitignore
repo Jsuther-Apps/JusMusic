@@ -1,11 +1,12 @@
-# Files with Private Information
-/config.json
-/Dockerfile
-/.prettierrc
-/.replit
-/LICENSE
-/Procfile
+# Bot files
+config.json
+app.json
+.prettierrc
+.replit
+Dockerfile
+LICENSE
+Procfile
+start.bat
 
-# NPM/Node Files
+# Node files
 /node_modules
-/.npm

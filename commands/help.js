@@ -1,54 +1,27 @@
-const Discord = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
-module.exports.run = async (bot, message, args) => {
-    //We have to set a argument for the help command beacuse its going to have a seperate argument.
-    let helpArray = message.content.split(" ");
-    let helpArgs = helpArray.slice(1);
+module.exports = {
+  name: "help",
+  aliases: ["h"],
+  description: "Display all commands and descriptions",
+  execute(message) {
+    let commands = message.client.commands.array();
 
-    //Custom Help command by using the second argument.
-    if(helpArgs[0] === 'gaming') {
-        return message.reply("This is a Gaming information Command.")
-    }
+    let helpEmbed = new MessageEmbed()
+      .setTitle(`${message.client.user.username} Help`)
+      .setDescription("List of all commands")
+      .setColor("#F8AA2A");
 
-    //Normal usage of (prefix)help without any args. (Shows all of the commands and you should set the commands yourself)
-    if(!helpArgs[0]) {
-        var embed = new Discord.MessageEmbed()
-            .setTitle(`Click here for all commands`)
-            .setURL(`https://github.com/Jsuther-Apps/JusBot-Music/tree/main/Music Commands`)
-            .setAuthor(`Here is the Avaible Commands to use:`)
-            .setDescription('```Play || Stop || Volume || Skip || Pause || Resume || Queue```')
-            .addField('`Note: Use js?help <COMMAND_NAME> for help on that command`')
-            .addFields({ name: 'Prefix', value: '```js?```', inline: true})
-            .setColor('#00FFF3')
-            
-        message.channel.send(embed);
-    }
+    commands.forEach((cmd) => {
+      helpEmbed.addField(
+        `**${message.client.prefix}${cmd.name} ${cmd.aliases ? `(${cmd.aliases})` : ""}**`,
+        `${cmd.description}`,
+        true
+      );
+    });
 
-    //Reads the moudle.exports.config (This line of code is on commands folder, each command will read automaticly) by the second argument (the command name) and shows the information of it.
-    if(helpArgs[0]) {
-        let command = helpArgs[0];
+    helpEmbed.setTimestamp();
 
-        if(bot.commands.has(command)) {
-            
-            command = bot.commands.get(command);
-            var embed = new Discord.MessageEmbed()
-            .setAuthor(`${command.config.name} Command`)
-            .setDescription(`
-            - **Command's Description** __${command.config.description || "There is no Description for this command."}__
-            - **Command's Usage:** __${command.config.usage || "No Usage"}__
-            - **Command's Permissions:** __${command.config.accessableby || "Members"}__
-            - **Command's Aliases:** __${command.config.aliases || "No Aliases"}__
-            `)
-            .setColor('#2EFF00')
-
-        message.channel.send(embed);
-    }}
-}
-
-module.exports.config = {
-    name: "help",
-    description: "",
-    usage: "?help",
-    accessableby: "Members",
-    aliases: []
-}
+    return message.channel.send(helpEmbed).catch(console.error);
+  }
+};
